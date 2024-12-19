@@ -22,11 +22,21 @@ const SignIn = ()  => {
             });
             const data = await res.json();
             console.log(data);
+
+            if (res.ok) {
+                // Store token in local storage
+                localStorage.setItem('authToken', data._id);
+        
+                // Navigate to tasks
+                navigate('/private/tasks');
+              } else {
+                console.error(data.message || 'Authentication failed');
+              }
             
           } catch (error) {
             console.log(error)
           }
-          navigate('/tasks');
+        
     };
 
     return (
