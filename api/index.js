@@ -38,6 +38,20 @@ const Users = mongoose.model('Users',{
 
 );
 
+
+// schema  for tasks
+
+const Task = mongoose.model('Task', {
+    name: {
+         type: String, 
+         required: true 
+        },
+    completed: {
+         type: Boolean, 
+         default: false 
+        },
+});
+
 const errorHandler = (statusCode, message) => {
     const error = new Error();
     error.statusCode = statusCode;
@@ -84,6 +98,75 @@ app.post('/api/', async (req, res, next) => {
       next(error);
     }
   });
+
+
+
+// all the task manger ralted routes
+
+
+
+// Get all tasks
+app.get('/api/tasks', async (req, res) => {
+    try {
+      const tasks = await Task.find().sort({ completed: 1 });
+      res.json(tasks);
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to fetch tasks' });
+    }
+  });
+
+
+// Add a new task
+app.post('/api/tasks', async (req, res) => {
+    try {
+      const task = new Task({ name: req.body.name });
+      await task.save();
+      res.json(task);
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to create task' });
+    }
+  });
+
+
+// Toggle task completion
+app.put('/api/tasks/:id', async (req, res) => {
+    try {
+      const task = await Task.findById(req.params.id);
+      task.completed = !task.completed;
+      await task.save();
+      res.json(task);
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to update task' });
+    }
+  });
+
+
+// Delete a task
+app.delete('/api/tasks/:id', async (req, res) => {
+    try {
+      await Task.findByIdAndDelete(req.params.id);
+      res.json({ message: 'Task deleted' });
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to delete task' });
+    }
+  });
+
+
+
+
+  // Delete all tasks
+app.delete('/api/tasks', async (req, res) => {
+    try {
+      await Task.deleteMany();
+      res.json({ message: 'All tasks deleted' });
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to delete tasks' });
+    }
+  });
+
+
+
+
 
 
 // app.get('/', (req, res) => {
