@@ -61,6 +61,30 @@ const Tasks = () => {
       .catch((err) => console.error('Error deleting all tasks:', err));
   };
 
+  // logout function
+  const handleSignOut = async () => {
+    try {
+      const res = await fetch('/api/logout',{
+        method: 'GET',
+        credentials: 'include',
+
+     });
+
+     if (res.ok) {
+      // Clear localStorage after successful logout
+      localStorage.clear();
+      alert('You have been logged out!');
+      // Redirect to login or home page if needed
+      window.location.href = '/';
+    } else {
+      console.error('Failed to log out');
+    }
+      
+    } catch (error) {
+      console.error('An error occurred during logout:', error);
+  }
+  };
+
   return (
     <div className="min-h-screen bg-[#182747] p-2 lg:p-8">
       <div className="max-w-xl mx-auto bg-[#5B8FB9] p-6 rounded-lg shadow-md">
@@ -115,7 +139,10 @@ const Tasks = () => {
           Delete All Tasks
         </button>
       </div>
-    </div>
+      
+        <div onClick={handleSignOut} className='text-white border rounded-md max-w-20 px-3 py-1 mx-auto bg-green-600 mt-4  cursor-pointer hover:opacity-75'>Logout</div>
+      </div>
+    
   );
 };
 
