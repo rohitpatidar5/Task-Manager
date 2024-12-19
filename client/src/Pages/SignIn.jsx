@@ -3,16 +3,30 @@ import { FaCog, FaWrench, FaThumbsUp, FaMagic } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { FaLinkedin } from 'react-icons/fa';
 import { Link } from 'react-router-dom'; // <-- Import Link
-
+import { useNavigate } from 'react-router-dom';
 const SignIn = ()  => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         // Handle login logic here
-        console.log('Email:', email);
-        console.log('Password:', password);
+        try {
+            const res = await fetch('/api/', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({email, password}),
+            });
+            const data = await res.json();
+            console.log(data);
+            
+          } catch (error) {
+            console.log(error)
+          }
+          navigate('/tasks');
     };
 
     return (

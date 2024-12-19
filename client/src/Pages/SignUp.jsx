@@ -9,11 +9,24 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle signup logic here
-    console.log('Email:', email);
-    console.log('Password:', password);
+    try {
+      const res = await fetch('/api/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({username, email,password}),
+      });
+      const data = await res.json();
+      console.log(data);
+      }
+     catch (error) {
+      
+      console.log(error.message);
+    }
     navigate('/'); // Navigate to the homepage after signup
   };
 
